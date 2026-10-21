@@ -185,23 +185,28 @@ function toast(msg, error = false){
 // FUNGSI CALLER BACKEND (KOMPATIBEL GOOGLE.SCRIPT.RUN / HTTP FETCH)
 function runBackend(action, payload = {}) {
   return new Promise((resolve, reject) => {
+    // Jika dijalankan di dalam lingkungan Google Apps Script
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run
         .withSuccessHandler(resolve)
         .withFailureHandler(reject)[action](payload);
     } else {
-      const form = new FormData();
-      form.append('action', action);
-      form.append('payload', JSON.stringify(payload));
-
-      fetch(SCRIPT_URL, { method: 'POST', body: form })
+      // Jika dijalankan dari file HTML lokal (Web Browser biasa)
+      const url = `${SCRIPT_URL}?action=${encodeURIComponent(action)}&payload=${encodeURIComponent(JSON.stringify(payload))}`;
+      
+      fetch(url)
         .then(res => res.json())
-        .then(res => res.success !== false ? resolve(res) : reject(res))
-        .catch(reject);
+        .then(res => {
+          if (res && res.success === false) reject(res);
+          else resolve(res);
+        })
+        .catch(err => {
+          console.error("Fetch Error:", err);
+          reject(new Error("Gagal terhubung ke Google Sheets. Pastikan Web App disetel ke 'Anyone'."));
+        });
     }
   });
 }
-
 // 1. CARI DAN PASANG NAMA OTOMATIS BERDASARKAN NIK
 function fillEmployeeName(){
   const inputNik = $('nik').value.trim();
