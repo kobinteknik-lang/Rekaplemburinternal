@@ -3,76 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rekap Lembur Karyawan</title>
+<title>Sistem Rekap Lembur</title>
 <style>
 :root{--navy:#15324b;--blue:#2563eb;--bg:#f4f7fb;--line:#e2e8f0;--muted:#64748b;--red:#b91c1c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033}
-header{background:linear-gradient(125deg,#15324b,#245b83);color:white;padding:28px 20px 64px}.header-inner,.container{max-width:1180px;margin:auto}
-.kicker{font-size:12px;text-transform:uppercase;letter-spacing:1.6px;opacity:.8;font-weight:700}h1{margin:8px 0;font-size:clamp(25px,4vw,36px)}header p{margin:0;color:#dbeafe}
-.container{padding:0 20px 36px;margin-top:-38px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
-.stat,.panel{background:white;border:1px solid #e8edf4;border-radius:16px;box-shadow:0 8px 24px #19324b0a}.stat{padding:18px}.stat .label{font-size:13px;color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:7px;color:var(--navy)}
-.panel{padding:22px;margin-bottom:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}h2{font-size:18px;margin:0;color:var(--navy)}.sub{font-size:13px;color:var(--muted);margin-top:5px}
-.field{display:flex;flex-direction:column;gap:7px}
-label{font-size:13px;font-weight:650;color:#334155}input,select{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;background:#fff;color:#172033;outline:none}
+header{background:linear-gradient(125deg,#15324b,#245b83);color:white;padding:24px 20px 50px}.header-inner,.container{max-width:1180px;margin:auto}
+h1{margin:4px 0;font-size:clamp(22px,3.5vw,30px)}header p{margin:0;color:#dbeafe;font-size:14px}
+.container{padding:0 16px 36px;margin-top:-30px}
+.panel{background:white;border:1px solid #e8edf4;border-radius:14px;box-shadow:0 6px 20px #19324b0a;padding:20px;margin-bottom:18px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+h2{font-size:16px;margin:0;color:var(--navy)}
+.form-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;font-weight:650;color:#334155}
+input,select{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px 11px;font:inherit;font-size:13px;background:#fff;color:#172033;outline:none}
 input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2563eb18}
-.actions{display:flex;gap:8px}button{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:white}.secondary{background:#eaf0f6;color:#334155}.outline{background:white;border:1px solid #cbd5e1;color:#334155}.danger{background:#fee2e2;color:var(--red)}.small{padding:7px 10px;font-size:12px}button:disabled{opacity:.55;cursor:wait}
-.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-bottom:16px}.filters .field{min-width:150px;flex:1}.filters .search{flex:2;min-width:220px}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:930px;background:white}th,td{padding:12px 13px;text-align:left;border-bottom:1px solid #edf1f6;font-size:13px;vertical-align:top}th{background:#f8fafc;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}tbody tr:hover{background:#fafcff}tbody tr:last-child td{border-bottom:0}.employee{font-weight:700;color:var(--navy)}.muted{color:var(--muted)}.pill{display:inline-block;background:#dcfce7;color:#166534;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:750}.empty{text-align:center;padding:30px;color:var(--muted)}
-.toast{position:fixed;right:20px;bottom:20px;background:#15324b;color:white;padding:13px 16px;border-radius:12px;box-shadow:0 10px 30px #0002;display:none;max-width:calc(100% - 40px);z-index:10}.toast.error{background:#991b1b}footer{text-align:center;color:#94a3b8;font-size:12px;padding:0 20px 24px}
-@media(max-width:800px){.stat{padding:14px}.stat strong{font-size:22px}}
-@media(max-width:520px){header{padding:24px 16px 58px}.container{padding:0 12px 24px}.panel{padding:16px}.stats{grid-template-columns:1fr}.panel-head{align-items:flex-start;flex-direction:column}.filters{display:grid;grid-template-columns:1fr}.filters .field,.filters .search{min-width:0}}
+input[readonly]{background:#f8fafc;color:#64748b}
+.actions{display:flex;gap:8px;margin-top:14px}
+button{border:0;border-radius:8px;padding:9px 14px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+.primary{background:var(--blue);color:white}.secondary{background:#eaf0f6;color:#334155}.outline{background:white;border:1px solid #cbd5e1;color:#334155}.danger{background:#fee2e2;color:var(--red)}.small{padding:5px 8px;font-size:11px}
+button:disabled{opacity:.55;cursor:wait}
+
+/* Dashboard Styles */
+.dashboard-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px;background:#f8fafc;padding:12px;border-radius:10px;border:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px;text-align:center}
+.stat .label{font-size:12px;color:var(--muted);font-weight:600}
+.stat strong{display:block;font-size:22px;margin-top:4px;color:var(--navy)}
+
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:700px;background:white}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #edf1f6;font-size:13px}
+th{background:#f8fafc;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+tbody tr:hover{background:#fafcff}
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:13px}
+.toast{position:fixed;right:20px;bottom:20px;background:#15324b;color:white;padding:12px 16px;border-radius:10px;box-shadow:0 8px 24px #0002;display:none;z-index:10;font-size:13px}.toast.error{background:#991b1b}
+
+@media(max-width:900px){.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-filters,.stats{grid-template-columns:1fr}}
+@media(max-width:500px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
 <header>
   <div class="header-inner">
-    <div class="kicker">Administrasi • Human Resources</div>
-    <h1>Rekap Data Lembur</h1>
-    <p>Pantau, filter, dan unduh laporan rekapitulasi jam lembur karyawan.</p>
+    <h1>Input & Rekap Lembur Karyawan</h1>
+    <p>Pencatatan lembur terintegrasi Google Sheets</p>
   </div>
 </header>
 
 <main class="container">
-  <section class="stats">
-    <div class="stat"><div class="label">Total Pengajuan</div><strong id="statCount">0</strong></div>
-    <div class="stat"><div class="label">Total Jam Lembur</div><strong id="statHours">0 jam</strong></div>
-    <div class="stat"><div class="label">Jumlah Karyawan</div><strong id="statPeople">0</strong></div>
-  </section>
 
+  <!-- PANEL FORM INPUT -->
   <section class="panel">
     <div class="panel-head">
-      <div>
-        <h2>Filter & Data Rekap</h2>
-        <div class="sub">Filter data berdasarkan rentang tanggal, departemen, atau kata kunci.</div>
+      <h2>Form Input Lembur</h2>
+    </div>
+    <form id="overtimeForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="date">Tanggal *</label>
+          <input type="date" id="date" required>
+        </div>
+        <div class="field">
+          <label for="nik">Pilih NIK *</label>
+          <input id="nik" list="employeeOptions" placeholder="Ketik NIK..." autocomplete="off" required>
+          <datalist id="employeeOptions"></datalist>
+        </div>
+        <div class="field">
+          <label for="name">Nama Karyawan</label>
+          <input id="name" placeholder="Otomatis terisi..." readonly required>
+        </div>
+        <div class="field">
+          <label for="description">Pekerjaan *</label>
+          <input id="description" placeholder="Deskripsi pekerjaan" required>
+        </div>
+        <div class="field">
+          <label for="hours">Durasi (Jam) *</label>
+          <input type="number" id="hours" step="0.5" min="0.5" placeholder="Contoh: 2 atau 2.5" required>
+        </div>
       </div>
       <div class="actions">
-        <button class="outline" type="button" id="refreshBtn">Muat Ulang</button>
-        <button class="primary" type="button" id="exportBtn">Ekspor CSV</button>
+        <button class="primary" type="submit" id="saveBtn">Simpan Data</button>
+        <button class="secondary" type="button" id="resetBtn">Reset</button>
       </div>
+    </form>
+  </section>
+
+  <!-- PANEL DASHBOARD & REKAP -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Dashboard & Rekap Data Lembur</h2>
+      <button class="outline small" type="button" id="refreshBtn">Muat Ulang Data</button>
     </div>
 
-    <div class="filters">
-      <div class="field"><label for="filterFrom">Dari tanggal</label><input type="date" id="filterFrom"></div>
-      <div class="field"><label for="filterTo">Sampai tanggal</label><input type="date" id="filterTo"></div>
+    <!-- FILTER DASHBOARD -->
+    <div class="dashboard-filters">
       <div class="field">
-        <label for="filterDepartment">Departemen</label>
-        <select id="filterDepartment"><option value="">Semua departemen</option></select>
+        <label for="dashYear">Filter Tahun</label>
+        <select id="dashYear"><option value="">Semua Tahun</option></select>
       </div>
-      <div class="field search"><label for="search">Cari data</label><input id="search" placeholder="Nama, NIK, pekerjaan, status..."></div>
-      <button class="secondary" type="button" id="clearFilters">Reset Filter</button>
+      <div class="field">
+        <label for="dashMonth">Filter Bulan</label>
+        <select id="dashMonth">
+          <option value="">Semua Bulan</option>
+          <option value="01">Januari</option><option value="02">Februari</option>
+          <option value="03">Maret</option><option value="04">April</option>
+          <option value="05">Mei</option><option value="06">Juni</option>
+          <option value="07">Juli</option><option value="08">Agustus</option>
+          <option value="09">September</option><option value="10">Oktober</option>
+          <option value="11">November</option><option value="12">Desember</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="dashName">Filter Karyawan</label>
+        <select id="dashName"><option value="">Semua Karyawan</option></select>
+      </div>
     </div>
 
+    <!-- CARDS DAHBOARD -->
+    <section class="stats">
+      <div class="stat">
+        <div class="label">Total Pengajuan</div>
+        <strong id="statCount">0</strong>
+      </div>
+      <div class="stat">
+        <div class="label">Total Jam Lembur</div>
+        <strong id="statHours">0 Jam</strong>
+      </div>
+      <div class="stat">
+        <div class="label">Jumlah Karyawan Lembur</div>
+        <strong id="statPeople">0 Orang</strong>
+      </div>
+    </section>
+
+    <!-- TABEL REKAP DATA -->
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th>Tanggal</th>
-            <th>Karyawan</th>
-            <th>Departemen</th>
-            <th>Waktu</th>
+            <th>NIK</th>
+            <th>Nama Karyawan</th>
+            <th>Pekerjaan</th>
             <th>Durasi</th>
-            <th>Keterangan</th>
-            <th>Status</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -81,23 +155,22 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2563eb18
       <div id="emptyState" class="empty">Memuat data dari Google Sheets...</div>
     </div>
   </section>
+
 </main>
 
-<footer>Rekap Lembur Karyawan • Google Sheets + Apps Script</footer>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
+// URL WEB APP GOOGLE APPS SCRIPT
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUS8HZlmevSUyl_Ul5vfUqdx99-B46ATFintRb0UxhGQqGVWdFaFABgffoA-M3jCGY/exec';
+
 let records = [];
+let employees = [];
+
 const $ = id => document.getElementById(id);
 
 function esc(v){
   return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-function fmtHours(v){
-  if (v == null || !Number.isFinite(Number(v))) return '—';
-  let total = Math.round(Number(v) * 60), h = Math.floor(total / 60), m = total % 60;
-  return m ? `${h} jam ${m} menit` : `${h} jam`;
 }
 
 function toast(msg, error = false){
@@ -109,45 +182,76 @@ function toast(msg, error = false){
   toast.t = setTimeout(() => e.style.display = 'none', 3500);
 }
 
-function visibleRecords(){
-  const f = $('filterFrom').value,
-        t = $('filterTo').value,
-        d = $('filterDepartment').value,
-        q = $('search').value.trim().toLowerCase();
+// FUNGSI CALLER BACKEND (KOMPATIBEL GOOGLE.SCRIPT.RUN / HTTP FETCH)
+function runBackend(action, payload = {}) {
+  return new Promise((resolve, reject) => {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject)[action](payload);
+    } else {
+      const form = new FormData();
+      form.append('action', action);
+      form.append('payload', JSON.stringify(payload));
 
-  return records.filter(r =>
-    (!f || r.date >= f) &&
-    (!t || r.date <= t) &&
-    (!d || r.department === d) &&
-    (!q || [r.name, r.nik, r.department, r.description, r.status].join(' ').toLowerCase().includes(q))
-  ).sort((a,b) => b.date.localeCompare(a.date) || (b.createdAt || 0) - (a.createdAt || 0));
+      fetch(SCRIPT_URL, { method: 'POST', body: form })
+        .then(res => res.json())
+        .then(res => res.success !== false ? resolve(res) : reject(res))
+        .catch(reject);
+    }
+  });
 }
 
-function render(){
-  const selected = $('filterDepartment').value;
-  const depts = [...new Set(records.map(r => r.department).filter(Boolean))].sort();
-  
-  $('filterDepartment').innerHTML = '<option value="">Semua departemen</option>' + 
-    depts.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('');
-  if (depts.includes(selected)) $('filterDepartment').value = selected;
+// 1. CARI DAN PASANG NAMA OTOMATIS BERDASARKAN NIK
+function fillEmployeeName(){
+  const inputNik = $('nik').value.trim();
+  const emp = employees.find(e => String(e.nik).trim() === inputNik);
+  $('name').value = emp ? emp.name : '';
+}
 
-  const rows = visibleRecords();
+function loadEmployees(){
+  runBackend('listEmployees')
+    .then(data => {
+      employees = Array.isArray(data) ? data : [];
+      $('employeeOptions').innerHTML = employees.map(e => 
+        `<option value="${esc(e.nik)}">${esc(e.name)}</option>`
+      ).join('');
+      
+      $('dashName').innerHTML = '<option value="">Semua Karyawan</option>' + 
+        employees.map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('');
+    })
+    .catch(() => toast('Gagal memuat database karyawan.', true));
+}
+
+// 2. LOGIKA FILTER DASHBOARD
+function getFilteredRecords(){
+  const year = $('dashYear').value;
+  const month = $('dashMonth').value;
+  const name = $('dashName').value.toLowerCase();
+
+  return records.filter(r => {
+    if (!r.date) return false;
+    const [rYear, rMonth] = r.date.split('-');
+    
+    const matchYear = !year || rYear === year;
+    const matchMonth = !month || rMonth === month;
+    const matchName = !name || (r.name && r.name.toLowerCase() === name);
+
+    return matchYear && matchMonth && matchName;
+  });
+}
+
+// 3. RENDER TABEL DAN DASHBOARD
+function render(){
+  const rows = getFilteredRecords();
+
   $('tableBody').innerHTML = rows.map(r => `
     <tr>
       <td>${esc(r.date)}</td>
-      <td>
-        <div class="employee">${esc(r.name)}</div>
-        <div class="muted">${esc(r.nik || 'Tanpa NIK')}${r.shift ? ' • ' + esc(r.shift) : ''}</div>
-      </td>
-      <td>${esc(r.department)}</td>
-      <td>${esc(r.start)}–${esc(r.end)}</td>
-      <td><strong>${esc(fmtHours(r.hours))}</strong></td>
-      <td style="white-space:normal;min-width:200px">${esc(r.description)}</td>
-      <td>
-        <span class="pill" style="${r.status === 'Ditolak' ? 'background:#fee2e2;color:#991b1b' : r.status === 'Diajukan' ? 'background:#fef3c7;color:#92400e' : ''}">
-          ${esc(r.status)}
-        </span>
-      </td>
+      <td>${esc(r.nik)}</td>
+      <td><strong>${esc(r.name)}</strong></td>
+      <td>${esc(r.description)}</td>
+      <td><strong>${Number(r.hours || 0)} Jam</strong></td>
       <td>
         <button class="danger small" onclick="deleteRecord('${esc(r.id)}')">Hapus</button>
       </td>
@@ -155,71 +259,102 @@ function render(){
   `).join('');
 
   $('emptyState').style.display = rows.length ? 'none' : 'block';
-  $('emptyState').textContent = records.length ? 'Tidak ada data yang cocok dengan filter.' : 'Belum ada data lembur.';
+  $('emptyState').textContent = records.length ? 'Tidak ada data sesuai filter.' : 'Belum ada data lembur.';
+
+  const totalHours = rows.reduce((acc, r) => acc + (Number(r.hours) || 0), 0);
+  const uniquePeople = new Set(rows.map(r => r.nik || r.name)).size;
 
   $('statCount').textContent = rows.length;
-  $('statHours').textContent = fmtHours(rows.reduce((s, r) => s + (Number(r.hours) \vert{}\vert{} 0), 0));$('statPeople').textContent = new Set(rows.map(r => (r.nik || r.name).toLowerCase())).size;
+  $('statHours').textContent = `${totalHours} Jam`;
+  $('statPeople').textContent = `${uniquePeople} Orang`;
 }
 
+// 4. AMBIL DATA HISTORI DARI GOOGLE SHEETS
 function loadData(showMessage = false){
   $('emptyState').style.display = 'block';$('emptyState').textContent = 'Memuat data dari Google Sheets...';
-  
-  google.script.run
-    .withSuccessHandler(data => {
+
+  runBackend('listRecords')
+    .then(data => {
       records = Array.isArray(data) ? data : [];
+      
+      const years = [...new Set(records.map(r => r.date ? r.date.split('-')[0] : null).filter(Boolean))].sort().reverse();
+      const currentYear = $('dashYear').value;
+      $('dashYear').innerHTML = '<option value="">Semua Tahun</option>' + 
+        years.map(y => `<option value="${y}">${y}</option>`).join('');
+      if (years.includes(currentYear)) $('dashYear').value = currentYear;
+
       render();
-      if (showMessage) toast('Data rekap berhasil diperbarui.');
+      if (showMessage) toast('Data berhasil diperbarui.');
     })
-    .withFailureHandler(err => {
+    .catch(err => {
       $('emptyState').textContent = 'Gagal memuat data.';
       toast(err && err.message ? err.message : 'Gagal memuat data.', true);
-    })
-    .listRecords();
+    });
 }
 
+// 5. EVENT LISTENERS
+$('nik').addEventListener('input', fillEmployeeName);$('nik').addEventListener('change', fillEmployeeName);
+
+$('overtimeForm').addEventListener('submit', e => {
+  e.preventDefault();
+  fillEmployeeName();
+
+  const payload = {
+    date: $('date').value,
+    nik: $('nik').value.trim(),
+    name: $('name').value.trim(),
+    description: $('description').value.trim(),
+    hours: $('hours').value
+  };
+
+  if (!payload.name) {
+    toast('NIK tidak ditemukan di Database Karyawan!', true);
+    return;
+  }
+
+  $('saveBtn').disabled = true;
+  $('saveBtn').textContent = 'Menyimpan...';
+
+  runBackend('saveRecord', payload)
+    .then(res => {
+      $('saveBtn').disabled = false;
+      $('saveBtn').textContent = 'Simpan Data';
+      toast(res.message || 'Data lembur berhasil disimpan!');
+      
+      $('overtimeForm').reset();
+      $('name').value = '';$('date').value = new Date().toISOString().split('T')[0];
+
+      loadData();
+    })
+    .catch(err => {
+      $('saveBtn').disabled = false;
+      $('saveBtn').textContent = 'Simpan Data';
+      toast(err && err.message ? err.message : 'Gagal menyimpan data.', true);
+    });
+});
+
 window.deleteRecord = id => {
-  const r = records.find(x => x.id === id);
-  if (!r || !confirm(`Hapus data lembur ${r.name} tanggal ${r.date}?`)) return;
-  
-  google.script.run
-    .withSuccessHandler(res => {
+  if (!confirm('Yakin ingin menghapus baris data lembur ini?')) return;
+  runBackend('deleteRecord', id)
+    .then(res => {
       toast(res.message || 'Data dihapus.');
       loadData();
     })
-    .withFailureHandler(err => toast(err && err.message ? err.message : 'Gagal menghapus data.', true))
-    .deleteRecord(id);
+    .catch(err => toast(err && err.message ? err.message : 'Gagal menghapus data.', true));
 };
 
+$('resetBtn').addEventListener('click', () => {$('overtimeForm').reset();
+  $('name').value = '';$('date').value = new Date().toISOString().split('T')[0];
+});
+
 $('refreshBtn').addEventListener('click', () => loadData(true));
-['filterFrom', 'filterTo', 'filterDepartment'].forEach(id => $(id).addEventListener('change', render));$('search').addEventListener('input', render);
+['dashYear', 'dashMonth', 'dashName'].forEach(id => $(id).addEventListener('change', render));
 
-$('clearFilters').addEventListener('click', () => {
-  $('filterFrom').value = '';$('filterTo').value = '';
-  $('filterDepartment').value = '';$('search').value = '';
-  render();
-});
-
-$('exportBtn').addEventListener('click', () => {
-  const rows = visibleRecords();
-  if (!rows.length){ toast('Tidak ada data untuk diekspor.', true); return; }
-  
-  const heads = ['Tanggal', 'NIK', 'Nama Karyawan', 'Departemen', 'Shift', 'Jam Mulai', 'Jam Selesai', 'Durasi (jam)', 'Keterangan', 'Status'];
-  const cell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-  const csv = [heads, ...rows.map(r => [
-    r.date, r.nik, r.name, r.department, r.shift, r.start, r.end, Number(r.hours).toFixed(2), r.description, r.status
-  ])].map(a => a.map(cell).join(';')).join('\r\n');
-
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }),
-        url = URL.createObjectURL(blob),
-        a = document.createElement('a');
-        
-  a.href = url;
-  a.download = 'rekap_lembur.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
+// Inisialisasi awal
+$('date').value = new Date().toISOString().split('T')[0];
+loadEmployees();
 loadData();
 </script>
+
 </body>
 </html>
