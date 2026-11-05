@@ -386,7 +386,7 @@
           <label for="dashDept">Filter Bagian</label>
           <select id="dashDept">
             <option value="">Semua Bagian</option>
-            <option value="Maintenance">Maintenance</option>
+            <option value="Engineering">Engineering</option>
             <option value="Workshop">Workshop</option>
             <option value="Production">Production</option>
             <option value="Utility">Utility</option>
@@ -430,8 +430,8 @@
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-// URL WEB APP GOOGLE APPS SCRIPT
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUS8HZlmevSUyl_Ul5vfUqdx99-B46ATFintRb0UxhGQqGVWdFaFABgffoA-M3jCGY/exec';
+// URL WEB APP GOOGLE APPS SCRIPT ANDA
+const SCRIPT_URL = 'GANTI_DENGAN_URL_WEB_APP_ANDA_DISINI';
 
 let records = [];
 let employees = [];
@@ -484,23 +484,27 @@ function toast(msg, error = false){
   toast.t = setTimeout(() => e.style.display = 'none', 3500);
 }
 
-// FUNGSI CALLER BACKEND
+// FUNGSI CALLER BACKEND YANG STABIL (Mendukung GET & POST)
 function runBackend(action, payload = {}) {
   return new Promise((resolve, reject) => {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
-      // Jika dijalankan di dalam container Google Apps Script
       google.script.run
         .withSuccessHandler(resolve)
         .withFailureHandler(reject)[action](payload);
     } else {
-      // Jika dijalankan sebagai Web App terpisah (GitHub Pages / Localhost)
-      const url = `${SCRIPT_URL}?action=${encodeURIComponent(action)}`;
+      const isGet = (action === 'listEmployees' || action === 'listRecords');
+      let url = `${SCRIPT_URL}?action=${encodeURIComponent(action)}`;
       
-      fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Menghindari preflight CORS OPTIONS
-        body: JSON.stringify({ action: action, payload: payload })
-      })
+      const options = {
+        method: isGet ? 'GET' : 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+      };
+
+      if (!isGet) {
+        options.body = JSON.stringify({ action: action, payload: payload });
+      }
+
+      fetch(url, options)
         .then(res => res.json())
         .then(res => {
           if (res && res.success === false) reject(res);
@@ -508,7 +512,7 @@ function runBackend(action, payload = {}) {
         })
         .catch(err => {
           console.error("Fetch Error:", err);
-          reject(new Error("Gagal terhubung ke Google Sheets. Periksa kembali URL Web App Anda."));
+          reject(new Error("Gagal terhubung ke Google Sheets. Pastikan Web App disetel ke 'Anyone'."));
         });
     }
   });
@@ -517,6 +521,7 @@ function runBackend(action, payload = {}) {
 function fillEmployeeName(){
   const inputNik = $('nik').value.trim();
   const emp = employees.find(e => String(e.nik).trim() === inputNik);
+  
   if(emp) {
     $('name').value = emp.name;
     if(emp.department && $('department')) {
