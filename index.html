@@ -288,8 +288,11 @@
             <label for="department">Bagian / Workshop *</label>
             <select id="department" required>
               <option value="">Pilih Bagian...</option>
-              <option value="Engineering">Engineering</option>
+              <option value="ENG">ENG</option>
+              <option value="ME">ME</option>
               <option value="Workshop">Workshop</option>
+              <option value="Production">Production</option>
+              <option value="Utility">Utility</option>
             </select>
           </div>
           <div class="field">
@@ -386,11 +389,11 @@
           <label for="dashDept">Filter Bagian</label>
           <select id="dashDept">
             <option value="">Semua Bagian</option>
-            <option value="Engineering">Engineering</option>
+            <option value="ENG">ENG</option>
+            <option value="ME">ME</option>
             <option value="Workshop">Workshop</option>
             <option value="Production">Production</option>
             <option value="Utility">Utility</option>
-            <option value="Lainnya">Lainnya</option>
           </select>
         </div>
         <div class="field">
@@ -524,6 +527,7 @@ function fillEmployeeName(){
   
   if(emp) {
     $('name').value = emp.name;
+    // Hanya isi otomatis jika di database karyawan ada isinya (tidak menimpa pilihan manual jika kosong)
     if(emp.department && $('department')) {
       $('department').value = emp.department;
     }
